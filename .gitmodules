@@ -1,0 +1,3 @@
+[submodule "tornado-stable"]
+	path = tornado-stable
+	url = git@github.com:tornadoweb/tornado.git
