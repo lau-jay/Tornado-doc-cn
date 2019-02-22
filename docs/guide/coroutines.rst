@@ -1,4 +1,4 @@
-Coroutines
+协程
 ==========
 
 .. testsetup::
@@ -12,14 +12,19 @@ suspend and resume execution instead of a chain of callbacks
 <http://www.gevent.org>`_ are sometimes called coroutines as well, but
 in Tornado all coroutines use explicit context switches and are called
 as asynchronous functions).
+Tornado中推荐通过 **协程** 的方式写异步代码.  协程使用了Python ``yield`` 关键字来挂起和恢复执行程序而不是链式回调(像在 `gevent<http://www.gevent.org>`_ 中出现的轻量级线程有时也被称为协程, 但Tornado中所有协程都采用显式的上下文切换并作为异步函数被调用).
+
+
 
 Coroutines are almost as simple as synchronous code, but without the
 expense of a thread.  They also `make concurrency easier
 <https://glyph.twistedmatrix.com/2014/02/unyielding.html>`_ to reason
 about by reducing the number of places where a context switch can
 happen.
+使用协程方式来写异步代码几乎跟写同步代码一样简单，并不需额外的线程开销。 还通过减少上下文切换来 `使并发编程更简单
+<https://glyph.twistedmatrix.com/2014/02/unyielding.html>`_ 。
 
-Example::
+例子::
 
     async def fetch_coroutine(url):
         http_client = AsyncHTTPClient()
@@ -28,23 +33,19 @@ Example::
 
 .. _native_coroutines:
 
-Native vs decorated coroutines
+原生协 vs 装饰器协程
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Python 3.5 introduced the ``async`` and ``await`` keywords (functions
-using these keywords are also called "native coroutines"). For
-compatibility with older versions of Python, you can use "decorated"
-or "yield-based" coroutines using the `tornado.gen.coroutine`
-decorator.
+Python 3.5 引入了 ``async`` 和 ``await`` 关键字(使用这些关键字的函数也被称为”原生协程”)。
+为了兼容旧版本的Python，你可以使用"装饰器"或"基于yield"的协程在函数定义的时候使用 ``@gen.coroutine`` 装饰器, 并且
+用 yield代替await.
 
-Native coroutines are the recommended form whenever possible. Only use
-decorated coroutines when compatibility with older versions of Python
-is required. Examples in the tornado documentation will generally use
-the native form.
+尽可能使用原生协程。 只在为里兼容旧版本的Python时使用装饰协程。
+Tornado的文档里通常都使用原生协程。
 
-Translation between the two forms is generally straightforward::
+两种表格之间的转换通常很简单::
 
-    # Decorated:                    # Native:
+    # 装饰器形式:                    # 原生:
 
     # Normal function declaration
     # with decorator                # "async def" keywords
@@ -83,20 +84,17 @@ Other differences between the two forms of coroutine are:
   coroutines return an *awaitable* object that is not a `.Future`. In
   Tornado the two are mostly interchangeable.
 
-How it works
+它是如何工作的
 ~~~~~~~~~~~~
 
-This section explains the operation of decorated coroutines. Native
-coroutines are conceptually similar, but a little more complicated
-because of the extra integration with the Python runtime.
+这一段解释基于装饰器的协程。原生协程在概念上是基本类似的，但有一点
+复杂因为与Python运行时的额外集成有关。
 
-A function containing ``yield`` is a **generator**.  All generators
-are asynchronous; when called they return a generator object instead
-of running to completion.  The ``@gen.coroutine`` decorator
-communicates with the generator via the ``yield`` expressions, and
-with the coroutine's caller by returning a `.Future`.
+一个函数包含了关键字 ``yield`` , 那么这个函数是一个生成器。所有的生成器都是异步的；
+当调用生成器的时候会返回一个生成器对象而不是该生成器执行的结果。使用 ``@gen.coroutine`` 装饰器
+装饰的生成器, 如此产生的协程的调用者能通过 ``yield`` 表达式和协程进行通信，并且调用者可以获得一个 `.Future` 与协程进行交互。
 
-Here is a simplified version of the coroutine decorator's inner loop::
+下面是一个协程装饰器内部循环的简单版本::
 
     # Simplified inner loop of tornado.gen.Runner
     def run(self):
@@ -108,20 +106,15 @@ Here is a simplified version of the coroutine decorator's inner loop::
             self.run()
         future.add_done_callback(callback)
 
-The decorator receives a `.Future` from the generator, waits (without
-blocking) for that `.Future` to complete, then "unwraps" the `.Future`
-and sends the result back into the generator as the result of the
-``yield`` expression.  Most asynchronous code never touches the `.Future`
-class directly except to immediately pass the `.Future` returned by
-an asynchronous function to a ``yield`` expression.
+装饰器从生成器接收一个 `.Future` 对象，等待(非阻塞)这个 `.Future` 对象执行完成，
+然后解开('unwrap')这个 `.Future` 对象，并把结果作为 `yield` 的结果传回给生成器器。
+大多数异步代码从来不会接触到 `.Future` 对象, 除非立即将由异步函数返回的`.Future`传递给 `yield` 表达式
 
-How to call a coroutine
+如何调用协程
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Coroutines do not raise exceptions in the normal way: any exception
-they raise will be trapped in the awaitable object until it is
-yielded. This means it is important to call coroutines in the right
-way, or you may have errors that go unnoticed::
+协程一般不会抛异常: 任何异常都会被awaitable捕获直到它被返回。这意味着正确地调用协程很重要，
+否则可能会无法得到错误信息::
 
     async def divide(x, y):
         return x / y
