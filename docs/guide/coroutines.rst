@@ -5,22 +5,8 @@
 
    from tornado import gen
 
-**Coroutines** are the recommended way to write asynchronous code in
-Tornado. Coroutines use the Python ``await`` or ``yield`` keyword to
-suspend and resume execution instead of a chain of callbacks
-(cooperative lightweight threads as seen in frameworks like `gevent
-<http://www.gevent.org>`_ are sometimes called coroutines as well, but
-in Tornado all coroutines use explicit context switches and are called
-as asynchronous functions).
-Tornado中推荐通过 **协程** 的方式写异步代码.  协程使用了Python ``yield`` 关键字来挂起和恢复执行程序而不是链式回调(像在 `gevent<http://www.gevent.org>`_ 中出现的轻量级线程有时也被称为协程, 但Tornado中所有协程都采用显式的上下文切换并作为异步函数被调用).
+Tornado中推荐通过 **协程** 的方式写异步代码.  协程使用了Python  ``await`` or ``yield`` 关键字来挂起和恢复执行程序而不是链式回调(像在  `gevent<http://www.gevent.org>`_  中出现的轻量级线程有时也被称为协程, 但Tornado中所有协程都采用显式的上下文切换并作为异步函数被调用).
 
-
-
-Coroutines are almost as simple as synchronous code, but without the
-expense of a thread.  They also `make concurrency easier
-<https://glyph.twistedmatrix.com/2014/02/unyielding.html>`_ to reason
-about by reducing the number of places where a context switch can
-happen.
 使用协程方式来写异步代码几乎跟写同步代码一样简单，并不需额外的线程开销。 还通过减少上下文切换来 `使并发编程更简单
 <https://glyph.twistedmatrix.com/2014/02/unyielding.html>`_ 。
 
