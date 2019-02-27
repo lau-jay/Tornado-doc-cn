@@ -29,7 +29,7 @@ Python 3.5 引入了 ``async`` 和 ``await`` 关键字(使用这些关键字的�
 尽可能使用原生协程。 只在为里兼容旧版本的Python时使用装饰协程。
 Tornado的文档里通常都使用原生协程。
 
-两种表格之间的转换通常很简单::
+两种形式之间的转换通常很简单::
 
     # 装饰器形式:                    # 原生:
 
@@ -45,23 +45,18 @@ Tornado的文档里通常都使用原生协程。
         # special exception.            # Return normally
         raise gen.Return(b)             return b
 
-Other differences between the two forms of coroutine are:
+以下是两者之间协程的其他不同之处:
 
-- Native coroutines are generally faster.
-- Native coroutines can use ``async for`` and ``async with``
-  statements which make some patterns much simpler.
-- Native coroutines do not run at all unless you ``await`` or
-  ``yield`` them. Decorated coroutines can start running "in the
-  background" as soon as they are called. Note that for both kinds of
-  coroutines it is important to use ``await`` or ``yield`` so that
-  any exceptions have somewhere to go.
-- Decorated coroutines have additional integration with the
-  `concurrent.futures` package, allowing the result of
-  ``executor.submit`` to be yielded directly. For native coroutines,
-  use `.IOLoop.run_in_executor` instead.
-- Decorated coroutines support some shorthand for waiting on multiple
-  objects by yielding a list or dict. Use `tornado.gen.multi` to do
-  this in native coroutines.
+- 原生协程通常更快
+- 原生协程能使用 ``async for`` 和 ``async with``
+  语法这使得一些模式更简单。
+- 除非你 ``await`` 或 ``yield`` 它们，否则原生协程都不会运行。
+  装饰器协程一旦被调用就可以“在后台”开始运行。 
+  请注意，对于这两种协同程序，使用 ``await`` 或 ``yield`` 非常重要，
+  这样任何异常都可以使用。
+- 装饰协程与 `concurrent.futures` 包有额外的集成，允许直接生成 ``executor.submit`` 的结果。 对于本地协同程序，
+   使用 `.IOLoop.run_in_executor` 代替。
+- 装饰协程通过yield列表或字典来简化支持等待多个对象。 使用`tornado.gen.multi`在原生协程中执行此操作。
 - Decorated coroutines can support integration with other packages
   including Twisted via a registry of conversion functions.
   To access this functionality in native coroutines, use

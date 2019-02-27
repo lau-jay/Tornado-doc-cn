@@ -1,35 +1,31 @@
-.. title:: Tornado Web Server
+.. title:: Tornado Web 服务
 
 .. meta::
     :google-site-verification: g4bVhgwbVO1d9apCUsT-eKlApg31Cygbp8VGZY8Rf0g
 
-|Tornado Web Server|
+|Tornado Web 服务|
 ====================
 
 .. |Tornado Web Server| image:: tornado.png
     :alt: Tornado Web Server
 
-`Tornado <http://www.tornadoweb.org>`_ is a Python web framework and
-asynchronous networking library, originally developed at `FriendFeed
-<http://friendfeed.com>`_.  By using non-blocking network I/O, Tornado
-can scale to tens of thousands of open connections, making it ideal for
-`long polling <http://en.wikipedia.org/wiki/Push_technology#Long_polling>`_,
-`WebSockets <http://en.wikipedia.org/wiki/WebSocket>`_, and other
-applications that require a long-lived connection to each user.
+`Tornado <http://www.tornadoweb.org>`_ 是一个Python Web框架和异步网络库, 最初是在 `FriendFeed <http://friendfeed.com>`_ 开发的
+.  因为使用非阻塞网络I/O，Tornado可以支撑上万的网络连接， 使其成为
+`长轮询 <http://en.wikipedia.org/wiki/Push_technology#Long_polling>`_,
+`WebSockets <http://en.wikipedia.org/wiki/WebSocket>`_, 和其他需要与每个用户建立长期连接的应用程序的理想选择。
 
-Quick links
+快速链接
 -----------
 
-* Current version: |version| (`download from PyPI <https://pypi.python.org/pypi/tornado>`_, :doc:`release notes <releases>`)
-* `Source (github) <https://github.com/tornadoweb/tornado>`_
-* Mailing lists: `discussion <http://groups.google.com/group/python-tornado>`_ and `announcements <http://groups.google.com/group/python-tornado-announce>`_
+* 当前版本: |version| (`download from PyPI <https://pypi.python.org/pypi/tornado>`_, :doc:`release notes <releases>`)
+* `源代码 (github) <https://github.com/tornadoweb/tornado>`_
+* 邮件列表: `discussion <http://groups.google.com/group/python-tornado>`_ and `announcements <http://groups.google.com/group/python-tornado-announce>`_
 * `Stack Overflow <http://stackoverflow.com/questions/tagged/tornado>`_
 * `Wiki <https://github.com/tornadoweb/tornado/wiki/Links>`_
 
 Hello, world
 ------------
-
-Here is a simple "Hello, world" example web app for Tornado::
+这里有一个简单的Tornado "Hello, world" Web app的demo::
 
     import tornado.ioloop
     import tornado.web
@@ -48,30 +44,20 @@ Here is a simple "Hello, world" example web app for Tornado::
         app.listen(8888)
         tornado.ioloop.IOLoop.current().start()
 
-This example does not use any of Tornado's asynchronous features; for
-that see this `simple chat room
+这个demo没有使用任何Tornado的异步功能；关于异步功能的例子可以看这个 `简单的聊天室
 <https://github.com/tornadoweb/tornado/tree/stable/demos/chat>`_.
 
-Threads and WSGI
+线程和WSGI
 ----------------
 
-Tornado is different from most Python web frameworks. It is not based
-on `WSGI <https://wsgi.readthedocs.io/en/latest/>`_, and it is
-typically run with only one thread per process. See the :doc:`guide`
-for more on Tornado's approach to asynchronous programming.
+Tornado不同于很多其他Python Web框架。它不是基于 `WSGI <https://wsgi.readthedocs.io/en/latest/>`_, 
+并且通常每个进程只运行一个线程. 有关Tornado异步编程方法的更多信息，请参阅 :doc:`guide`
 
-While some support of WSGI is available in the `tornado.wsgi` module,
-it is not a focus of development and most applications should be
-written to use Tornado's own interfaces (such as `tornado.web`)
-directly instead of using WSGI.
+虽然在 `tornado.wsgi` 模块中提供了对WSGI的一些支持，但它不是开发的重点，并且大多数应用程序应该编写为直接使用Tornado自己的接口（例如 `tornado.web` ）而不是使用WSGI。
 
-In general, Tornado code is not thread-safe. The only method in
-Tornado that is safe to call from other threads is
-`.IOLoop.add_callback`. You can also use `.IOLoop.run_in_executor` to
-asynchronously run a blocking function on another thread, but note
-that the function passed to ``run_in_executor`` should avoid
-referencing any Tornado objects. ``run_in_executor`` is the
-recommended way to interact with blocking code.
+通常，Tornado代码不是线程安全的。 在Tornado中唯一可以安全地从其他线程调用的方法是 `IOLoop.add_callback`
+您还可以使用 `IOLoop.run_in_executor` 在另一个线程上异步运行阻塞函数，但请注意，传递给run_in_executor的函数应该避免引用任何Tornado对象。
+ ``run_in_executor`` 是与阻塞代码交互的推荐方法。
 
 
 Installation
