@@ -54,16 +54,11 @@ Tornado的文档里通常都使用原生协程。
   装饰器协程一旦被调用就可以“在后台”开始运行。 
   请注意，对于这两种协同程序，使用 ``await`` 或 ``yield`` 非常重要，
   这样任何异常都可以使用。
-- 装饰协程与 `concurrent.futures` 包有额外的集成，允许直接生成 ``executor.submit`` 的结果。 对于本地协同程序，
+- 装饰器协程与 `concurrent.futures` 包有额外的集成，允许直接生成 ``executor.submit`` 的结果。 对于本地协同程序，
    使用 `.IOLoop.run_in_executor` 代替。
-- 装饰协程通过yield列表或字典来简化支持等待多个对象。 使用`tornado.gen.multi`在原生协程中执行此操作。
-- Decorated coroutines can support integration with other packages
-  including Twisted via a registry of conversion functions.
-  To access this functionality in native coroutines, use
-  `tornado.gen.convert_yielded`.
-- Decorated coroutines always return a `.Future` object. Native
-  coroutines return an *awaitable* object that is not a `.Future`. In
-  Tornado the two are mostly interchangeable.
+- 装饰器协程通过yield列表或字典来简化支持等待多个对象。 使用`tornado.gen.multi`在原生协程中执行此操作。
+- 装饰器协程可以支持与其他包的集成 包括通过转换函数注册表的Twisted。要在本机协同程序中访问此功能，请使用 `tornado.gen.convert_yielded`。
+- 装饰器协程始终返回 `.Future` 对象。原生协程返回一个不是 `.Future` 的 *awaitable* 对象。在Troando中，两者大多可以互换。
 
 它是如何工作的
 ~~~~~~~~~~~~
@@ -105,23 +100,17 @@ Tornado的文档里通常都使用原生协程。
         # the coroutine is called incorrectly.
         divide(1, 0)
 
-In nearly all cases, any function that calls a coroutine must be a
-coroutine itself, and use the ``await`` or ``yield`` keyword in the
-call. When you are overriding a method defined in a superclass,
-consult the documentation to see if coroutines are allowed (the
-documentation should say that the method "may be a coroutine" or "may
-return a `.Future`")::
+在几乎所有情况下，调用协程的任何函数都必须是协程本身，并在调用中使用await或yield关键字。
+当覆写父类中定义的方法时，请查阅文档以查看是否允许支持协程（文档应该说方法“可能是协程”或“可能返回 `.Future`”）::
 
     async def good_call():
         # await will unwrap the object returned by divide() and raise
         # the exception.
         await divide(1, 0)
 
-Sometimes you may want to "fire and forget" a coroutine without waiting
-for its result. In this case it is recommended to use `.IOLoop.spawn_callback`,
-which makes the `.IOLoop` responsible for the call. If it fails,
-the `.IOLoop` will log a stack trace::
-
+有时你可能想要“fire and forget”一个协程而不等待它的结果。
+在这种情况下，建议使用 `.IOLoop.spawn_callback`，
+这使得 `.IOLoop` 负责调用。如果失败，`.IOLoop` 将记录堆栈::
     # The IOLoop will catch the exception and print a stack trace in
     # the logs. Note that this doesn't look like a normal call, since
     # we pass the function object to be called by the IOLoop.
