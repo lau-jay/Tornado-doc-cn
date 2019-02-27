@@ -56,31 +56,26 @@ Tornado不同于很多其他Python Web框架。它不是基于 `WSGI <https://ws
 虽然在 `tornado.wsgi` 模块中提供了对WSGI的一些支持，但它不是开发的重点，并且大多数应用程序应该编写为直接使用Tornado自己的接口（例如 `tornado.web` ）而不是使用WSGI。
 
 通常，Tornado代码不是线程安全的。 在Tornado中唯一可以安全地从其他线程调用的方法是 `IOLoop.add_callback`
-您还可以使用 `IOLoop.run_in_executor` 在另一个线程上异步运行阻塞函数，但请注意，传递给run_in_executor的函数应该避免引用任何Tornado对象。
- ``run_in_executor`` 是与阻塞代码交互的推荐方法。
+您还可以使用 `IOLoop.run_in_executor` 在另一个线程上异步运行阻塞函数，但请注意，传递给run_in_executor的函数应该避免引用任何Tornado对象。 ``run_in_executor`` 是与阻塞代码交互的推荐方法。
 
 
-Installation
+安装Tornado
 ------------
 
 ::
 
     pip install tornado
 
-Tornado is listed in `PyPI <http://pypi.python.org/pypi/tornado>`_ and
-can be installed with ``pip``. Note that the source distribution
-includes demo applications that are not present when Tornado is
-installed in this way, so you may wish to download a copy of the
-source tarball or clone the `git repository
-<https://github.com/tornadoweb/tornado>`_ as well.
+在 `PyPI <http://pypi.python.org/pypi/tornado>`_ 中可以用 ``pip`` 安装.
+请注意，源代码分发包括以这种方式安装Tornado时不存在demo应用程序，
+因此您可能希望下载源代码的tar包或克隆 `git存储库
+<https://github.com/tornadoweb/tornado>`_ .
 
-**Prerequisites**: Tornado 5.x runs on Python 2.7, and 3.4+ (Tornado
-6.0 will require Python 3.5+; Python 2 will no longer be supported).
-The updates to the `ssl` module in Python 2.7.9 are required (in some
-distributions, these updates may be available in older python
-versions). In addition to the requirements which will be installed
-automatically by ``pip`` or ``setup.py install``, the following
-optional packages may be useful:
+**先决条件**: 
+
+Tornado 5.x 运行需要的Python版本为Python 2.7, 或3.4+ (Tornado
+6.0 可能需要Python 3.5+; Python 2 将不被支持). 需要对Python 2.7.9中的ssl模块进行更新（在某些发行版中，这些更新可能在较旧的python版本中可用）。 
+除了将由 ``pip`` 或 ``setup.py install`` 自动安装的依赖之外，以下可选包可能很有用:
 
 * `pycurl <http://pycurl.sourceforge.net>`_ is used by the optional
   ``tornado.curl_httpclient``.  Libcurl version 7.22 or higher is required.
@@ -94,21 +89,17 @@ optional packages may be useful:
   monotonic clock, which improves reliability in environments where
   clock adjustments are frequent. No longer needed in Python 3.
 
-**Platforms**: Tornado should run on any Unix-like platform, although
-for the best performance and scalability only Linux (with ``epoll``)
-and BSD (with ``kqueue``) are recommended for production deployment
-(even though Mac OS X is derived from BSD and supports kqueue, its
-networking performance is generally poor so it is recommended only for
-development use).  Tornado will also run on Windows, although this
-configuration is not officially supported and is recommended only for
-development use. Without reworking Tornado IOLoop interface, it's not
-possible to add a native Tornado Windows IOLoop implementation or
-leverage Windows' IOCP support from frameworks like AsyncIO or Twisted.
+**系统平台**: Tornado 应该运行在任意Unix/Linux系统, 为了获得最佳性能和扩展性，建议只将
+ Linux (有 ``epoll``)和 BSD (有 ``kqueue``) 作为生产环境的部署系统
+(即使Mac OSX源自BSD并支持kqueue，但其网络性能通常很差，因此建议仅限于开发用途)。
+Tornado当然也可以在windows上运行，但是这个方式不受官方支持，建议仅用于开发。
+如果不重新设计Tornado IOLoop接口，那么将不可能添加原生的Tornado Windows IOLoop 实现或
+利用 ``IOCP`` 提供像AsyncIO或Twisted那样的框架级支持。
 
-Documentation
+文档
 -------------
 
-This documentation is also available in `PDF and Epub formats
+这份文档的英文版本同样提供 `PDF 和Epub格式的，中文暂时只提供在线。
 <https://readthedocs.org/projects/tornado/downloads/>`_.
 
 .. toctree::

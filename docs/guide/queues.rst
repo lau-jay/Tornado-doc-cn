@@ -1,4 +1,4 @@
-:class:`~tornado.queues.Queue` example - a concurrent web spider
+:class:`~tornado.queues.Queue` example - 一个并发web爬虫
 ================================================================
 
 .. currentmodule:: tornado.queues

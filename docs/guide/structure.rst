@@ -4,7 +4,7 @@
 
    import tornado.web
 
-Structure of a Tornado web application
+Tornado Web应用的结构
 ======================================
 
 A Tornado web application generally consists of one or more

@@ -1,4 +1,4 @@
-Templates and UI
+模版和UI
 ================
 
 .. testsetup::

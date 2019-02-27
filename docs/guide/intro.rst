@@ -1,4 +1,4 @@
-Introduction
+前言
 ------------
 
 `Tornado <http://www.tornadoweb.org>`_ is a Python web framework and

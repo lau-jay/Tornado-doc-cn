@@ -1,4 +1,4 @@
-Running and deploying
+运行和部署
 =====================
 
 Since Tornado supplies its own HTTPServer, running and deploying it is
