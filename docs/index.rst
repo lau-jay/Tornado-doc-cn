@@ -1,9 +1,9 @@
-.. title:: Tornado Web 服务
+.. title:: Tornado Web Server
 
 .. meta::
     :google-site-verification: g4bVhgwbVO1d9apCUsT-eKlApg31Cygbp8VGZY8Rf0g
 
-|Tornado Web 服务|
+Tornado Web Server
 ====================
 
 .. |Tornado Web Server| image:: tornado.png
@@ -71,9 +71,7 @@ Tornado不同于很多其他Python Web框架。它不是基于 `WSGI <https://ws
 因此您可能希望下载源代码的tar包或克隆 `git存储库
 <https://github.com/tornadoweb/tornado>`_ .
 
-**先决条件**: 
-
-Tornado 5.x 运行需要的Python版本为Python 2.7, 或3.4+ (Tornado
+**先决条件**: Tornado 5.x 运行需要的Python版本为Python 2.7, 或3.4+ (Tornado
 6.0 可能需要Python 3.5+; Python 2 将不被支持). 需要对Python 2.7.9中的ssl模块进行更新（在某些发行版中，这些更新可能在较旧的python版本中可用）。 
 除了将由 ``pip`` 或 ``setup.py install`` 自动安装的依赖之外，以下可选包可能很有用:
 
@@ -90,7 +88,7 @@ Tornado 5.x 运行需要的Python版本为Python 2.7, 或3.4+ (Tornado
   clock adjustments are frequent. No longer needed in Python 3.
 
 **系统平台**: Tornado 应该运行在任意Unix/Linux系统, 为了获得最佳性能和扩展性，建议只将
- Linux (有 ``epoll``)和 BSD (有 ``kqueue``) 作为生产环境的部署系统
+Linux (有 ``epoll``)和 BSD (有 ``kqueue``) 作为生产环境的部署系统
 (即使Mac OSX源自BSD并支持kqueue，但其网络性能通常很差，因此建议仅限于开发用途)。
 Tornado当然也可以在windows上运行，但是这个方式不受官方支持，建议仅用于开发。
 如果不重新设计Tornado IOLoop接口，那么将不可能添加原生的Tornado Windows IOLoop 实现或
