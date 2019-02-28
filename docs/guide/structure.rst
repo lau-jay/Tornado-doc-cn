@@ -7,12 +7,11 @@
 Tornado Web应用的结构
 ======================================
 
-A Tornado web application generally consists of one or more
-`.RequestHandler` subclasses, an `.Application` object which
-routes incoming requests to handlers, and a ``main()`` function
-to start the server.
+通常一个Tornado web应用包括一个或者多个 `.RequestHandler` 子类,
+一个可以将收到的请求路由到对应handler的 `.Application`  对象,
+和 一个启动服务的 ``main()`` 函数。
 
-A minimal "hello world" example looks something like this:
+一个最小的 "hello world" 例子就像下面这样:
 
 .. testcode::
 
@@ -36,27 +35,19 @@ A minimal "hello world" example looks something like this:
 .. testoutput::
    :hide:
 
-The ``Application`` object
+``Application`` 对象
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `.Application` object is responsible for global configuration, including
-the routing table that maps requests to handlers.
+`.Application`  对象是负责全局配置的, 包括映射请求转发给处理程序的路由表。
 
-The routing table is a list of `.URLSpec` objects (or tuples), each of
-which contains (at least) a regular expression and a handler class.
-Order matters; the first matching rule is used.  If the regular
-expression contains capturing groups, these groups are the *path
-arguments* and will be passed to the handler's HTTP method.  If a
-dictionary is passed as the third element of the `.URLSpec`, it
-supplies the *initialization arguments* which will be passed to
-`.RequestHandler.initialize`.  Finally, the `.URLSpec` may have a
-name, which will allow it to be used with
-`.RequestHandler.reverse_url`.
+路由表是 `.URLSpec` 对象(或元组)的列表, 其中每个都包含(至少)一个正则 表达式和一个处理类。
+关于解析顺序; 第一个匹配的规则会被使用。如果正则表达 式包含捕获组，这些组会被作为 *路径参数* 传递给处理函数的HTTP方法。
+如果一个字典作为 `.URLSpec` 的第三个参数被传递, 它会作为 *初始参数* 传递给 `.RequestHandler.initialize`。
+最后 URLSpec 可能有一个名字，这将允许它被 `.RequestHandler.reverse_url` 使用。
 
-For example, in this fragment the root URL ``/`` is mapped to
-``MainHandler`` and URLs of the form ``/story/`` followed by a number
-are mapped to ``StoryHandler``.  That number is passed (as a string) to
-``StoryHandler.get``.
+例如, 在这个片段中根URL ``/`` 映射到了 ``MainHandler``，
+像 ``/story/`` 后跟着一个数字这种形式的URL被映射到了 ``StoryHandler``。
+这个数字被传递(作为字符串)给 ``StoryHandler.get``。
 
 ::
 
@@ -77,46 +68,34 @@ are mapped to ``StoryHandler``.  That number is passed (as a string) to
         url(r"/story/([0-9]+)", StoryHandler, dict(db=db), name="story")
         ])
 
-The `.Application` constructor takes many keyword arguments that
-can be used to customize the behavior of the application and enable
-optional features; see `.Application.settings` for the complete list.
 
-Subclassing ``RequestHandler``
+`.Application` 构造函数有很多关键字参数可以用于自定义应用程序的行为和使用某些特性(或者功能);
+ 完整列表请查看 `.Application.settings`。
+
+``RequestHandler`` 子类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Most of the work of a Tornado web application is done in subclasses
-of `.RequestHandler`.  The main entry point for a handler subclass
-is a method named after the HTTP method being handled: ``get()``,
-``post()``, etc.  Each handler may define one or more of these methods
-to handle different HTTP actions.  As described above, these methods
-will be called with arguments corresponding to the capturing groups
-of the routing rule that matched.
+Tornado web 应用程序的大部分工作是在 RequestHandler 子类下完成的。
+处理子类的主入口点是一个命名为处理HTTP方法的函数: get(), post(), 等等。
+每个处理程序可以定义一个或者多个这种方法来处理不同的HTTP动作。
+如上所述, 这些方法将被匹配路由规则的捕获组对应的参数调用。
 
-Within a handler, call methods such as `.RequestHandler.render` or
-`.RequestHandler.write` to produce a response.  ``render()`` loads a
-`.Template` by name and renders it with the given
-arguments. ``write()`` is used for non-template-based output; it
-accepts strings, bytes, and dictionaries (dicts will be encoded as
-JSON).
+在处理程序中, 调用方法如 `.RequestHandler.render` 或者 `.RequestHandler.write` 产生一个响应。 ``render()`` 通过名字加载一个 `.Template` 并使用给定的参数渲染它。
+``write()``  被用于非模板基础的输出;它接受字符串, 字节, 和字典(字典会被编码成JSON)。
 
-Many methods in `.RequestHandler` are designed to be overridden in
-subclasses and be used throughout the application.  It is common
-to define a ``BaseHandler`` class that overrides methods such as
-`~.RequestHandler.write_error` and `~.RequestHandler.get_current_user`
-and then subclass your own ``BaseHandler`` instead of `.RequestHandler`
-for all your specific handlers.
+在  `.RequestHandler` 中的很多方法的设计是为了在子类中复写和在整个应用中使用。
+常用的方法是定义一个 ``BaseHandler`` 类,
+复写一些方法例如 `~.RequestHandler.write_error` 和  `~.RequestHandler.get_current_user` 然
+后子类继承使用你自己的 ``BaseHandler`` 而不是 `.RequestHandler` 在你所有具体的处理程序中.
 
-Handling request input
+处理请求
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The request handler can access the object representing the current
-request with ``self.request``.  See the class definition for
-`~tornado.httputil.HTTPServerRequest` for a complete list of
-attributes.
+处理器可以使用 ``self.request`` 访问当前请求对象。通过
+`~tornado.httputil.HTTPServerRequest` 类的定义查看完整的属性列表。
 
-Request data in the formats used by HTML forms will be parsed for you
-and is made available in methods like `~.RequestHandler.get_query_argument`
-and `~.RequestHandler.get_body_argument`.
+通过form表单传递的请求数据会被解析并且能过通过 `~.RequestHandler.get_query_argument`
+和  `~.RequestHandler.get_body_argument` 得到。
 
 .. testcode::
 
@@ -134,41 +113,28 @@ and `~.RequestHandler.get_body_argument`.
 .. testoutput::
    :hide:
 
-Since the HTML form encoding is ambiguous as to whether an argument is
-a single value or a list with one element, `.RequestHandler` has
-distinct methods to allow the application to indicate whether or not
-it expects a list.  For lists, use
-`~.RequestHandler.get_query_arguments` and
-`~.RequestHandler.get_body_arguments` instead of their singular
-counterparts.
+由form表单编码是不能确定一个标签的值是单一的还是一多个组成的列表  `.RequestHandler` 有明确的方式来允许应用程序表明它期望接收的值类型。对于列表，使用 `~.RequestHandler.get_query_arguments`
+和 `~.RequestHandler.get_body_arguments` 而非获取单个值的方法。
 
-Files uploaded via a form are available in ``self.request.files``,
-which maps names (the name of the HTML ``<input type="file">``
-element) to a list of files. Each file is a dictionary of the form
-``{"filename":..., "content_type":..., "body":...}``.  The ``files``
-object is only present if the files were uploaded with a form wrapper
-(i.e. a ``multipart/form-data`` Content-Type); if this format was not used
-the raw uploaded data is available in ``self.request.body``.
-By default uploaded files are fully buffered in memory; if you need to
-handle files that are too large to comfortably keep in memory see the
-`.stream_request_body` class decorator.
+通过表单上传的文件， 可以从 ``self.request.files`` 获取相关信息，它遍历文件名字(HTML标签 ``<input type="file">``) 到一个列表
+。 每个文件都是一个字典形式 ``{"filename":..., "content_type":..., "body":...}`` 。
+ ``files`` 对象如果文件上传是通过一个表单那么它是当前唯一的
+(比如 ``multipart/form-data`` Content-Type); 反之可以使用 ``self.request.body`` 获取文件对象。
+默认上传的文件是完全缓存在内存中的，如果你需要处理的文件比较大那么可以看看 `.stream_request_body` 类装饰器。
 
-In the demos directory,
-`file_receiver.py <https://github.com/tornadoweb/tornado/tree/master/demos/file_upload/>`_
-shows both methods of receiving file uploads.
+文件上传的例子： `file_receiver.py <https://github.com/tornadoweb/tornado/tree/master/demos/file_upload/>`_
+展示了两种方式上传文件。
 
-Due to the quirks of the HTML form encoding (e.g. the ambiguity around
-singular versus plural arguments), Tornado does not attempt to unify
-form arguments with other types of input.  In particular, we do not
-parse JSON request bodies.  Applications that wish to use JSON instead
-of form-encoding may override `~.RequestHandler.prepare` to parse their
-requests::
+由于HTML表单编码格式的怪异 (比如 在单数和复数参数的含糊不清),
+Tornado 不会试图统一表单参数和其他输入类型的参数。特别是, 我们不解析JSON请求体。
+应用程序希望使用JSON代替表单编码可以复写  `~.RequestHandler.prepare`  来解析它们的请求::
 
     def prepare(self):
-        if self.request.headers.get("Content-Type", "").startswith("application/json"):
+        if self.request.headers["Content-Type"].startswith("application/json"):
             self.json_args = json.loads(self.request.body)
         else:
             self.json_args = None
+
 
 Overriding RequestHandler methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

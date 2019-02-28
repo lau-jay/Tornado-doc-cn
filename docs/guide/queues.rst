@@ -1,25 +1,20 @@
-:class:`~tornado.queues.Queue` example - 一个并发web爬虫
+:class:`~tornado.queues.Queue` 示例 - 一个并发web爬虫
 ================================================================
 
 .. currentmodule:: tornado.queues
 
-Tornado's `tornado.queues` module implements an asynchronous producer /
-consumer pattern for coroutines, analogous to the pattern implemented for
-threads by the Python standard library's `queue` module.
+Tornado的 `tornado.queues` 模块实现了异步生产者 / 消费者模式的协程，
+类似于Python标准库的 `queue` 模块为线程实现的模式.
 
-A coroutine that yields `Queue.get` pauses until there is an item in the queue.
-If the queue has a maximum size set, a coroutine that yields `Queue.put` pauses
-until there is room for another item.
+一个协程会使用yield 暂停 `Queue.get` 直到队列中有值的时候才会继续执行。
+如果队列设置了最大长度, 协程会yield暂停 `Queue.put` 直到队列中有空间才会继续。
 
-A `~Queue` maintains a count of unfinished tasks, which begins at zero.
-`~Queue.put` increments the count; `~Queue.task_done` decrements it.
+一个 `~Queue` 会监控未完成任务的计数, 直到未完成任务计数为零。
+`~Queue.put` 增加未完成任务计数; `~Queue.task_done` 减少未完成任务计数。
 
-In the web-spider example here, the queue begins containing only base_url. When
-a worker fetches a page it parses the links and puts new ones in the queue,
-then calls `~Queue.task_done` to decrement the counter once. Eventually, a
-worker fetches a page whose URLs have all been seen before, and there is also
-no work left in the queue. Thus that worker's call to `~Queue.task_done`
-decrements the counter to zero. The main coroutine, which is waiting for
-`~Queue.join`, is unpaused and finishes.
+这个网络爬虫的例子，队列开始的时候只包含base_url。当一个worker抓取一个页面 并解析
+链接把链接加入队列中，然后调用 `~Queue.task_done` 减少计数一次。
+最后，当一个worker抓到的页面URL都是之前已经抓取过的并且队列中没有任务了。于是worker
+调用 `~Queue.task_done` 把计数减到0。主协程 `~Queue.join` 等待挂起的执行完成。
 
 .. literalinclude:: ../../tornado-stable/demos/webspider/webspider.py
