@@ -116,37 +116,33 @@ Tornado的文档里通常都使用原生协程。
     # we pass the function object to be called by the IOLoop.
     IOLoop.current().spawn_callback(divide, 1, 0)
 
-Using `.IOLoop.spawn_callback` in this way is *recommended* for
+使用 `.IOLoop.spawn_callback` 这种方式in this way is *recommended* for
 functions using ``@gen.coroutine``, but it is *required* for functions
 using ``async def`` (otherwise the coroutine runner will not start).
+对于使用@ gen.coroutine的函数，建议以这种方式使用IOLoop.spawn_callback，
+但是使用async def的函数需要它（否则协程运行器将无法启动）。
 
-Finally, at the top level of a program, *if the IOLoop is not yet
-running,* you can start the `.IOLoop`, run the coroutine, and then
-stop the `.IOLoop` with the `.IOLoop.run_sync` method. This is often
-used to start the ``main`` function of a batch-oriented program::
-
+最后，在程序的顶层，* 如果IOLoop尚未运行 * ，您可以启动 `.IOLoop`，
+使用 `.IOLoop.run_sync` 方法运行协程，然后停止IOLoop并得到协程的结果。 
+这通常用于启动入口函数 ``main`` 面向批处理的程序::
     # run_sync() doesn't take arguments, so we must wrap the
     # call in a lambda.
     IOLoop.current().run_sync(lambda: divide(1, 0))
 
-Coroutine patterns
+协程模式
 ~~~~~~~~~~~~~~~~~~
 
-Calling blocking functions
+调用阻塞函数
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The simplest way to call a blocking function from a coroutine is to
-use `.IOLoop.run_in_executor`, which returns
-``Futures`` that are compatible with coroutines::
-
+在协程中调用阻塞函数的最简单方法是使用  `.IOLoop.run_in_executor`, 返回一个与协程兼容的 ``Futures`` ::
     async def call_blocking():
         await IOLoop.current().run_in_executor(None, blocking_func, args)
 
-Parallelism
+并行
 ^^^^^^^^^^^
 
-The `.multi` function accepts lists and dicts whose values are
-``Futures``, and waits for all of those ``Futures`` in parallel:
+该 `.multi` 函数接受值为 ``Futures`` 的列表和字典，并等待所有这些  ``Futures``  并行执行:
 
 .. testcode::
 
@@ -168,7 +164,7 @@ The `.multi` function accepts lists and dicts whose values are
 .. testoutput::
    :hide:
 
-In decorated coroutines, it is possible to ``yield`` the list or dict directly::
+在装饰器协程中，可以直接 ``yield``  列表或字典::
 
     @gen.coroutine
     def parallel_fetch_decorated(url1, url2):
@@ -177,9 +173,7 @@ In decorated coroutines, it is possible to ``yield`` the list or dict directly::
 
 Interleaving
 ^^^^^^^^^^^^
-
-Sometimes it is useful to save a `.Future` instead of yielding it
-immediately, so you can start another operation before waiting.
+有时保存 `.Future` 而不是立即产生值是有用的，因为你可以等待之前启动另外一个操作。
 
 .. testcode::
 
@@ -199,8 +193,7 @@ immediately, so you can start another operation before waiting.
 .. testoutput::
    :hide:
 
-This is a little easier to do with decorated coroutines, because they
-start immediately when called:
+这对于装饰器协程来说更容易一些，因为他们在被调用时立即启动:
 
 .. testcode::
 
