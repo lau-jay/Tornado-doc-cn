@@ -210,15 +210,12 @@ Interleaving
 .. testoutput::
    :hide:
 
-Looping
+循环
 ^^^^^^^
 
-In native coroutines, ``async for`` can be used. In older versions of
-Python, looping is tricky with coroutines since there is no way to
-``yield`` on every iteration of a ``for`` or ``while`` loop and
-capture the result of the yield. Instead, you'll need to separate the
-loop condition from accessing the results, as in this example from
-`Motor <https://motor.readthedocs.io/en/stable/>`_::
+在原生协程里，能够使用``async for`` 。在旧版本的Python中，使用协程循环很棘手，因为
+无法在for循环或while循环的每次迭代中捕获yield的结果。事实上，你需要将循环条件和访问结果分开，比如
+`Motor <https://motor.readthedocs.io/en/stable/>`_ 中的例子::
 
     import motor
     db = motor.MotorClient().test
@@ -229,11 +226,11 @@ loop condition from accessing the results, as in this example from
         while (yield cursor.fetch_next):
             doc = cursor.next_object()
 
-Running in the background
+
+后台运行
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`.PeriodicCallback` is not normally used with coroutines. Instead, a
-coroutine can contain a ``while True:`` loop and use
+`.PeriodicCallback` 通常不是用在协程里的。事实上，一个协程能包含一个 ``while True:`` 循环和使用
 `tornado.gen.sleep`::
 
     async def minute_loop():
@@ -241,17 +238,15 @@ coroutine can contain a ``while True:`` loop and use
             await do_something()
             await gen.sleep(60)
 
-    # Coroutines that loop forever are generally started with
-    # spawn_callback().
+    # 死循环的协同程序通常使用
+    # spawn_callback()执行
     IOLoop.current().spawn_callback(minute_loop)
 
-Sometimes a more complicated loop may be desirable. For example, the
-previous loop runs every ``60+N`` seconds, where ``N`` is the running
-time of ``do_something()``. To run exactly every 60 seconds, use the
-interleaving pattern from above::
+有时可能需要更复杂的循环。例如，上一个循环每 ``60 + N`` 秒运行一次，
+其中 ``N`` 是`` do_something()`` 的运行时间。要完全每60秒运行一次，使用上面的方式交错执行::
 
     async def minute_loop2():
         while True:
-            nxt = gen.sleep(60)   # Start the clock.
-            await do_something()  # Run while the clock is ticking.
-            await nxt             # Wait for the timer to run out.
+            nxt = gen.sleep(60)   # 开始计时
+            await do_something()  # 在计时的同时切换执行do_something
+            await nxt             # 等待计时结束
