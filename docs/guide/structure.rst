@@ -145,8 +145,8 @@ Tornado 不会试图统一表单参数和其他输入类型的参数。特别是
 2. 使用Application配置中的初始化参数调用 `~.RequestHandler.initialize()`， ``initialize``
    通常应该只保存传递给成员变量的参数;它可能不会产生任何输出或调用
    `~.RequestHandler.send_error` 等方法。
-3. `~.RequestHandler.prepare()`被调用。这在所有处理程序子类共享的基类中最有用，因为无论使用哪种HTTP方法，
-    都会调用 ``prepare`` 。 ``prepare`` 可以产生输出; 如果它调用`〜.RequestHandler.finish`（或 ``redirect`` 等），
+3. `~.RequestHandler.prepare()` 被调用。这在所有处理程序子类共享的基类中最有用，因为无论使用哪种HTTP方法，都会调用 ``prepare`` 。 
+    ``prepare`` 可以产生输出; 如果它调用`〜.RequestHandler.finish`（或 ``redirect`` 等），
     处理就在这里停止。
 
 4. ``get（）``，``post（）`` ，``put（）`` 等等， 其中一个方法会被执行。如果URL正则表达式包含捕获组，它们作为参数传递给方法。
@@ -157,8 +157,7 @@ Tornado 不会试图统一表单参数和其他输入类型的参数。特别是
 被覆盖的方法包括:
 
 - `~.RequestHandler.write_error` - 输出HTML以便在错误页上使用。
-- `~.RequestHandler.on_connection_close` - 当客户端的链接断开时调用，应用程序可能会选择检测此情况并停止
-   进一步处理。 请注意，无法保证关闭可以及时检测到链接。
+- `~.RequestHandler.on_connection_close` - 当客户端的链接断开时调用，应用程序可能会选择检测此情况并停止进一步处理。 请注意，无法保证关闭可以及时检测到链接。
 - `~.RequestHandler.get_current_user` - 参见 :ref:`user-authentication`
 - `~.RequestHandler.get_user_locale` - 返回 `.Locale` 对象以便给当前用户使用。
 - `~.RequestHandler.set_default_headers` - 可用于在响应上设置其他标头（例如自定义 ``Server`` 标头）
@@ -166,22 +165,15 @@ Tornado 不会试图统一表单参数和其他输入类型的参数。特别是
 错误处理
 ~~~~~~~~~~~~~~
 
-If a handler raises an exception, Tornado will call
-`.RequestHandler.write_error` to generate an error page.
-`tornado.web.HTTPError` can be used to generate a specified status
-code; all other exceptions return a 500 status.
+如果处理程序引发异常，Tornado将调用 `.RequestHandler.write_error` 生成错误页面。
+ `tornado.web.HTTPError` 可用于生成指定的状态码;所有其他例外都返回500状态。
 
-The default error page includes a stack trace in debug mode and a
-one-line description of the error (e.g. "500: Internal Server Error")
-otherwise.  To produce a custom error page, override
-`RequestHandler.write_error` (probably in a base class shared by all
-your handlers).  This method may produce output normally via
-methods such as `~RequestHandler.write` and `~RequestHandler.render`.
-If the error was caused by an exception, an ``exc_info`` triple will
-be passed as a keyword argument (note that this exception is not
-guaranteed to be the current exception in `sys.exc_info`, so
-``write_error`` must use e.g.  `traceback.format_exception` instead of
-`traceback.format_exc`).
+默认错误页面包括调试模式下的堆栈跟踪和错误的一行描述（例如“500：内部服务器错误”）。
+要生成自定义错误页面，请覆写 `RequestHandler.write_error`（可能在你的处理程序中所有人共享的基类中
+）。该方法可以正常产生输出诸如 `~RequestHandler.write` 和 `~RequestHandler.render` 之类的方法。
+如果错误是由异常引起的，那么 ``exc_info`` 三元组将会出现， 作为关键字参数传递（请注意，此异常不是保证是`sys.exc_info`中的当前异常，所以
+ ``write_error`` 必须使用例如`traceback.format_exception`而不是 `traceback.format_exc`）。
+
 
 It is also possible to generate an error page from regular handler
 methods instead of ``write_error`` by calling
@@ -189,6 +181,8 @@ methods instead of ``write_error`` by calling
 The special exception `tornado.web.Finish` may be raised to terminate
 the handler without calling ``write_error`` in situations where simply
 returning is not convenient.
+也可以从常规处理程序生成错误页面 而不是通过 ``write_error`` 调用 `~.RequestHandler.set_status`，写一个回复，然后返回。
+可能会引发特殊的异常 `tornado.web.Finish` 来终止处理程序而不会在简单返回不方便的情况下调用``write_error``
 
 For 404 errors, use the ``default_handler_class`` `Application setting
 <.Application.settings>`.  This handler should override
