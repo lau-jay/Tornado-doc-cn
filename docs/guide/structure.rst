@@ -166,13 +166,13 @@ Tornado 不会试图统一表单参数和其他输入类型的参数。特别是
 ~~~~~~~~~~~~~~
 
 如果处理程序引发异常，Tornado将调用 `.RequestHandler.write_error` 生成错误页面。
- `tornado.web.HTTPError` 可用于生成指定的状态码;所有其他例外都返回500状态。
+`tornado.web.HTTPError` 可用于生成指定的状态码;所有其他例外都返回500状态。
 
 默认错误页面包括调试模式下的堆栈跟踪和错误的一行描述（例如“500：内部服务器错误”）。
-要生成自定义错误页面，请覆写 `RequestHandler.write_error`（可能在你的处理程序中所有人共享的基类中
-）。该方法可以正常产生输出诸如 `~RequestHandler.write` 和 `~RequestHandler.render` 之类的方法。
-如果错误是由异常引起的，那么 ``exc_info`` 三元组将会出现， 作为关键字参数传递（请注意，此异常不是保证是`sys.exc_info`中的当前异常，所以
- ``write_error`` 必须使用例如`traceback.format_exception`而不是 `traceback.format_exc`）。
+要生成自定义错误页面，请覆写 `RequestHandler.write_error`（可能在你的处理程序中所有人共享的基类中）。
+该方法可以正常产生输出诸如 `~RequestHandler.write` 和 `~RequestHandler.render` 之类的方法。
+如果错误是由异常引起的，那么 ``exc_info`` 三元组将会出现， 作为关键字参数传递（
+请注意，此异常不是保证是`sys.exc_info`中的当前异常，所以 ``write_error`` 必须使用例如 `traceback.format_exception` 而不是 `traceback.format_exc`）。
 
 
 It is also possible to generate an error page from regular handler
