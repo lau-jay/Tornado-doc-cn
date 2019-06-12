@@ -139,47 +139,31 @@ Tornado 不会试图统一表单参数和其他输入类型的参数。特别是
 覆写RequestHandler方法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to, certain other methods in
-`.RequestHandler` are designed to be overridden by subclasses when
-necessary. On every request, the following sequence of calls takes
-place:
 除了 ``get()``/``post()`` 之外，`.RequestHandler` 中的某些其他方法被设计为在必要时被子类覆盖。在每个请求中，都会发生以下调用时序:
 
 1. 每个请求都会创建一个新新的 `.RequestHandler` 对象。
 2. 使用Application配置中的初始化参数调用 `~.RequestHandler.initialize()`， ``initialize``
    通常应该只保存传递给成员变量的参数;它可能不会产生任何输出或调用
    `~.RequestHandler.send_error` 等方法。
-3. `~.RequestHandler.prepare()` is called. This is most useful in a
-   base class shared by all of your handler subclasses, as ``prepare``
-   is called no matter which HTTP method is used. ``prepare`` may
-   produce output; if it calls `~.RequestHandler.finish` (or
-   ``redirect``, etc), processing stops here.
-4. One of the HTTP methods is called: ``get()``, ``post()``, ``put()``,
-   etc. If the URL regular expression contains capturing groups, they
-   are passed as arguments to this method.
-5. When the request is finished, `~.RequestHandler.on_finish()` is
-   called. For most handlers this is immediately after ``get()`` (etc)
-   return; for handlers using the `tornado.web.asynchronous` decorator
-   it is after the call to `~.RequestHandler.finish()`.
+3. `~.RequestHandler.prepare()`被调用。这在所有处理程序子类共享的基类中最有用，因为无论使用哪种HTTP方法，
+    都会调用 ``prepare`` 。 ``prepare`` 可以产生输出; 如果它调用`〜.RequestHandler.finish`（或 ``redirect`` 等），
+    处理就在这里停止。
 
-All methods designed to be overridden are noted as such in the
-`.RequestHandler` documentation.  Some of the most commonly
-overridden methods include:
+4. ``get（）``，``post（）`` ，``put（）`` 等等， 其中一个方法会被执行。如果URL正则表达式包含捕获组，它们作为参数传递给方法。
+5. 当请求完成后，调用 `〜.RequestHandler.on_finish（）` 方法。 对于大多数处理程序，这是在比如 ``get（）`` 返回之后; 
+   对于使用 `tornado.web.asynchronous` 装饰器的处理程序，它是在调用 `〜.RequestHandler.finish（）` 之后。
 
-- `~.RequestHandler.write_error` -
-  outputs HTML for use on error pages.
-- `~.RequestHandler.on_connection_close` - called when the client
-  disconnects; applications may choose to detect this case and halt
-  further processing.  Note that there is no guarantee that a closed
-  connection can be detected promptly.
-- `~.RequestHandler.get_current_user` - see :ref:`user-authentication`
-- `~.RequestHandler.get_user_locale` - returns `.Locale` object to use
-  for the current user
-- `~.RequestHandler.set_default_headers` - may be used to set
-  additional headers on the response (such as a custom ``Server``
-  header)
+所有方法都被设计为可以覆写，更多的描述同样在 `.RequestHandler` 文档。 一些最常见的
+被覆盖的方法包括:
 
-Error Handling
+- `~.RequestHandler.write_error` - 输出HTML以便在错误页上使用。
+- `~.RequestHandler.on_connection_close` - 当客户端的链接断开时调用，应用程序可能会选择检测此情况并停止
+   进一步处理。 请注意，无法保证关闭可以及时检测到链接。
+- `~.RequestHandler.get_current_user` - 参见 :ref:`user-authentication`
+- `~.RequestHandler.get_user_locale` - 返回 `.Locale` 对象以便给当前用户使用。
+- `~.RequestHandler.set_default_headers` - 可用于在响应上设置其他标头（例如自定义 ``Server`` 标头）
+
+错误处理
 ~~~~~~~~~~~~~~
 
 If a handler raises an exception, Tornado will call
