@@ -149,7 +149,7 @@ Tornado 不会试图统一表单参数和其他输入类型的参数。特别是
     ``prepare`` 可以产生输出; 如果它调用 `~.RequestHandler.finish`（或 ``redirect`` 等），
     处理就在这里停止。
 
-4. ``get()``，``post()`` ，``put()`` 等等， 其中一个方法会被执行。如果URL正则表达式包含捕获组，它们作为参数传递给方法。
+4. ``get()``，``post()``，``put()`` 等等， 其中一个方法会被执行。如果URL正则表达式包含捕获组，它们作为参数传递给方法。
 5. 当请求完成后，调用 `~.RequestHandler.on_finish()` 方法。 对于大多数处理程序，这是在比如 ``get()`` 返回之后; 
    对于使用 `tornado.web.asynchronous` 装饰器的处理程序，它是在调用 `~.RequestHandler.finish()` 之后。
 
@@ -172,15 +172,15 @@ Tornado 不会试图统一表单参数和其他输入类型的参数。特别是
 要生成自定义错误页面，请覆写 `RequestHandler.write_error`
 （可能在你的处理程序中所有人共享的基类中）。该方法可以正常产生输出诸如 `~RequestHandler.write` 和 `~RequestHandler.render` 之类的方法。
 如果错误是由异常引起的，那么 ``exc_info`` 三元组将会出现， 作为关键字参数传递（
-请注意，此异常不是保证是`sys.exc_info`中的当前异常，所以 ``write_error`` 必须使用例如 `traceback.format_exception` 而不是 `traceback.format_exc`）。
+请注意，此异常不是保证是 `sys.exc_info` 中的当前异常，所以 ``write_error`` 必须使用例如 `traceback.format_exception` 而不是 `traceback.format_exc`）。
 
 也可以从常规处理程序生成错误页面 而不是通过 ``write_error`` 调用 `~.RequestHandler.set_status`，写一个回复，然后返回。
 可能会引发特殊的异常 `tornado.web.Finish` 来终止处理程序而不会在简单返回不方便的情况下调用 ``write_error``。
 
 对于404错误，请使用应用程序设置 `<.Application.settings>` 中的 ``default_handler_class``。
-这个处理程序应该覆写 `〜.RequestHandler.prepare` 而不是像 ``get（）`` 这样的更具体的方法，
-所以它适用于任何HTTP方法。 它应该产生如上所述的错误页面：通过引发 ``HTTPError（404）`` 并覆写 ``write_error``，
-或者调用 ``self.set_status（404）`` 并直接在producing the response directly in ``prepare()``.
+这个处理程序应该覆写 `~.RequestHandler.prepare` 而不是像 ``get()`` 这样的更具体的方法，
+所以它适用于任何HTTP方法。 它应该产生如上所述的错误页面：通过引发 ``HTTPError（404)`` 并覆写 ``write_error``，
+或者调用 ``self.set_status（404）`` 并直接在producing the response directly in ``prepare()``。
 
 重定向
 ~~~~~~~~~~~
@@ -190,12 +190,12 @@ Tornado 不会试图统一表单参数和其他输入类型的参数。特别是
 
 你可以在 `.RequestHandler` 对象中使用 ``self.redirect()`` 重定向用户到别处。
 还有一个可选参数 ``permanent``，你可以用它来表示永久重定向。 ``permanent`` 的默认值为 ``False`` ,
-这会生成 ``302 Found`` HTTP响应码适用于 ``POST``请求 成功后重定向用户等。
+这会生成 ``302 Found`` HTTP响应码适用于 ``POST`` 请求成功后重定向用户等。
 如果 ``permanent`` 是 ``True`` , 将会返回 ``301 Moved
 Permanently`` HTTP响应码，这是推荐的通常用于例如重定向到SEO友好的页面的
 方式。
 
-`.RedirectHandler`让你直接在你的 `.Application` 配置中配置重定向
+`.RedirectHandler` 让你直接在你的 `.Application` 配置中配置重定向
 路由表。 例如，配置一个单个静态重定向::
 
     app = tornado.web.Application([
@@ -203,8 +203,8 @@ Permanently`` HTTP响应码，这是推荐的通常用于例如重定向到SEO�
             dict(url="http://itunes.apple.com/my-app-id")),
         ])
 
-`.RedirectHandler`也支持正则表达式替换。以下规则将重定向 ``/ pictures /`` 开头的所有请求
-改为前缀``/ photos /``::
+`.RedirectHandler` 也支持正则表达式替换。以下规则将重定向 ``/ pictures /`` 开头的所有请求
+改为前缀 ``/ photos /`` ::
 
     app = tornado.web.Application([
         url(r"/photos/(.*)", MyPhotoHandler),
@@ -212,14 +212,14 @@ Permanently`` HTTP响应码，这是推荐的通常用于例如重定向到SEO�
             dict(url=r"/photos/{0}")),
         ])
 
-与 `.RequestHandler.redirect`不同，`.RedirectHandler` 默认使用永久性
-重定向。 这是因为在运行时路由表不会改变，被认为是永久性的，而在处理程序中找到的重定向可能是更改的其他逻辑的结果。
-要使用`.RedirectHandler`发送临时重定向，请添加 ``permanent = False`` 到 `.RedirectHandler` 初始化参数。
+与 `.RequestHandler.redirect` 不同，`.RedirectHandler` 默认使用永久性重定向。
+ 这是因为在运行时路由表不会改变，被认为是永久性的，而在处理程序中找到的重定向可能是更改的其他逻辑的结果。
+要使用 `.RedirectHandler` 发送临时重定向，请添加 ``permanent = False`` 到 `.RedirectHandler` 初始化参数。
 
 异步处理器
 ~~~~~~~~~~~~~~~~~~~~~
 
-某些处理程序方法（包括 ``prepare（）``和HTTP动词方法 ``get（）`` / ``post（）``等）可以被重写为协程使处理程序异步。
+某些处理程序方法（包括 ``prepare()`` 和HTTP动词方法 ``get()`` / ``post()``等）可以被重写为协程使处理程序异步。
 
 Tornado还支持使用 `tornado.web.asynchronous` 装饰器的基于回调的异步处理程序，但这种方式已弃用，将在Tornado 6.0中删除。
 新应用程序应该使用协程。
