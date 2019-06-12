@@ -212,14 +212,15 @@ Permanently`` HTTP响应码，这是推荐的通常用于例如重定向到SEO�
             dict(url=r"/photos/{0}")),
         ])
 
+
 与 `.RequestHandler.redirect` 不同，`.RedirectHandler` 默认使用永久性重定向。
- 这是因为在运行时路由表不会改变，被认为是永久性的，而在处理程序中找到的重定向可能是更改的其他逻辑的结果。
+这是因为在运行时路由表不会改变，被认为是永久性的，而在处理程序中找到的重定向可能是更改的其他逻辑的结果。
 要使用 `.RedirectHandler` 发送临时重定向，请添加 ``permanent = False`` 到 `.RedirectHandler` 初始化参数。
 
 异步处理器
 ~~~~~~~~~~~~~~~~~~~~~
 
-某些处理程序方法（包括 ``prepare()`` 和HTTP动词方法 ``get()`` / ``post()``等）可以被重写为协程使处理程序异步。
+某些处理程序方法（包括 ``prepare()`` 和HTTP动词方法 ``get()`` / ``post()`` 等)可以被重写为协程使处理程序异步。
 
 Tornado还支持使用 `tornado.web.asynchronous` 装饰器的基于回调的异步处理程序，但这种方式已弃用，将在Tornado 6.0中删除。
 新应用程序应该使用协程。
@@ -239,6 +240,6 @@ Tornado还支持使用 `tornado.web.asynchronous` 装饰器的基于回调的异
 .. testoutput::
    :hide:
 
-有关更高级的异步示例，请查看 `chat` 示例应用 `<https://github.com/tornadoweb/tornado/tree/stable/demos/chat>` _, 它使用 `长轮询` 实现了一个AJAX聊天室
- `<http://en.wikipedia.org/wiki/Push_technology#Long_polling>` _ 。长轮询的用户可能希望覆写 
+有关更高级的异步示例，请查看 `chat` 示例应用  `<https://github.com/tornadoweb/tornado/tree/stable/demos/chat>`_, 它使用 `长轮询`
+实现了一个AJAX聊天室 `<http://en.wikipedia.org/wiki/Push_technology#Long_polling>`_ 。长轮询的用户可能希望覆写
  ``on_connection_close（）`` 以在客户端关闭连接后进行清理（但请注意该方法的文档字符串以正确使用) 。
