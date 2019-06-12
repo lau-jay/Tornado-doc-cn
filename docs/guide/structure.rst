@@ -145,7 +145,7 @@ Tornado 不会试图统一表单参数和其他输入类型的参数。特别是
 2. 使用Application配置中的初始化参数调用 `~.RequestHandler.initialize()`， ``initialize``
    通常应该只保存传递给成员变量的参数;它可能不会产生任何输出或调用
    `~.RequestHandler.send_error` 等方法。
-3. `~.RequestHandler.prepare()` 被调用。这在所有处理程序子类共享的基类中最有用，因为无论使用哪种HTTP方法，都会调用 ``prepare`` 。 
+3. `~.RequestHandler.prepare()` 被调用。 这在所有处理程序子类共享的基类中最有用，因为无论使用哪种HTTP方法，都会调用 ``prepare``。
     ``prepare`` 可以产生输出; 如果它调用 `~.RequestHandler.finish`（或 ``redirect`` 等），
     处理就在这里停止。
 
