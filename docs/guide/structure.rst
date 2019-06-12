@@ -169,8 +169,9 @@ Tornado 不会试图统一表单参数和其他输入类型的参数。特别是
 `tornado.web.HTTPError` 可用于生成指定的状态码;所有其他例外都返回500状态。
 
 默认错误页面包括调试模式下的堆栈跟踪和错误的一行描述（例如“500：内部服务器错误”）。
-要生成自定义错误页面，请覆写 `RequestHandler.write_error`（可能在你的处理程序中所有人共享的基类中）。
-该方法可以正常产生输出诸如 `~RequestHandler.write` 和 `~RequestHandler.render` 之类的方法。
+要生成自定义错误页面，请覆写 `RequestHandler.write_error`
+（可能在你的处理程序中所有人共享的基类中）。该方法可以正常产生输出诸如
+ `~RequestHandler.write` 和 `~RequestHandler.render` 之类的方法。
 如果错误是由异常引起的，那么 ``exc_info`` 三元组将会出现， 作为关键字参数传递（
 请注意，此异常不是保证是`sys.exc_info`中的当前异常，所以 ``write_error`` 必须使用例如 `traceback.format_exception` 而不是 `traceback.format_exc`）。
 
@@ -219,16 +220,12 @@ Permanently`` HTTP响应码，这是推荐的通常用于例如重定向到SEO�
 异步处理器
 ~~~~~~~~~~~~~~~~~~~~~
 
-Certain handler methods (including ``prepare()`` and the HTTP verb
-methods ``get()``/``post()``/etc) may be overridden as coroutines to
-make the handler asynchronous.
+某些处理程序方法（包括 ``prepare（）``和HTTP动词方法 ``get（）`` / ``post（）``等）可以被重写为协程使处理程序异步。
 
-Tornado also supports a callback-based style of asynchronous handler
-with the `tornado.web.asynchronous` decorator, but this style is
-deprecated and will be removed in Tornado 6.0. New applications should
-use coroutines instead.
+Tornado还支持使用 `tornado.web.asynchronous` 装饰器的基于回调的异步处理程序，但这种方式已弃用，将在Tornado 6.0中删除。
+新应用程序应该使用协程。
 
-For example, here is a simple handler using a coroutine:
+例如，这是一个使用协程的简单处理程序:
 
 .. testcode::
 
@@ -243,11 +240,7 @@ For example, here is a simple handler using a coroutine:
 .. testoutput::
    :hide:
 
-For a more advanced asynchronous example, take a look at the `chat
-example application
-<https://github.com/tornadoweb/tornado/tree/stable/demos/chat>`_, which
-implements an AJAX chat room using `long polling
-<http://en.wikipedia.org/wiki/Push_technology#Long_polling>`_.  Users
-of long polling may want to override ``on_connection_close()`` to
-clean up after the client closes the connection (but see that method's
-docstring for caveats).
+有关更高级的异步示例，请查看 `chat` 示例应用
+<https://github.com/tornadoweb/tornado/tree/stable/demos/chat>`_, 它使用 `长轮询` 实现了一个AJAX聊天室
+<http://en.wikipedia.org/wiki/Push_technology#Long_polling>`_. 长轮询的用户可能希望覆写 
+ ``on_connection_close（）`` 以在客户端关闭连接后进行清理（但请注意该方法的文档字符串以正确使用) 。
