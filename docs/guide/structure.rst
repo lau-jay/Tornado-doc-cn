@@ -174,53 +174,37 @@ Tornado 不会试图统一表单参数和其他输入类型的参数。特别是
 如果错误是由异常引起的，那么 ``exc_info`` 三元组将会出现， 作为关键字参数传递（
 请注意，此异常不是保证是`sys.exc_info`中的当前异常，所以 ``write_error`` 必须使用例如 `traceback.format_exception` 而不是 `traceback.format_exc`）。
 
-
-It is also possible to generate an error page from regular handler
-methods instead of ``write_error`` by calling
-`~.RequestHandler.set_status`, writing a response, and returning.
-The special exception `tornado.web.Finish` may be raised to terminate
-the handler without calling ``write_error`` in situations where simply
-returning is not convenient.
 也可以从常规处理程序生成错误页面 而不是通过 ``write_error`` 调用 `~.RequestHandler.set_status`，写一个回复，然后返回。
-可能会引发特殊的异常 `tornado.web.Finish` 来终止处理程序而不会在简单返回不方便的情况下调用``write_error``
+可能会引发特殊的异常 `tornado.web.Finish` 来终止处理程序而不会在简单返回不方便的情况下调用``write_error``。
 
-For 404 errors, use the ``default_handler_class`` `Application setting
-<.Application.settings>`.  This handler should override
-`~.RequestHandler.prepare` instead of a more specific method like
-``get()`` so it works with any HTTP method.  It should produce its
-error page as described above: either by raising a ``HTTPError(404)``
-and overriding ``write_error``, or calling ``self.set_status(404)``
-and producing the response directly in ``prepare()``.
+对于404错误，请使用应用程序设置 `<.Application.settings>` 中的 ``default_handler_class``。
+这个处理程序应该覆写 `〜.RequestHandler.prepare` 而不是像``get（）`` 这样的更具体的方法，
+所以它适用于任何HTTP方法。 它应该产生如上所述的错误页面：通过引发` `HTTPError（404）`` 并覆写 ``write_error``，
+或者调用``self.set_status（404）`` 并直接在producing the response directly in ``prepare()``.
 
-Redirection
+重定向
 ~~~~~~~~~~~
 
-There are two main ways you can redirect requests in Tornado:
-`.RequestHandler.redirect` and with the `.RedirectHandler`.
+在Tornado中有两个主要的方法重定向请求:
+`.RequestHandler.redirect` 和 `.RedirectHandler`.
 
-You can use ``self.redirect()`` within a `.RequestHandler` method to
-redirect users elsewhere. There is also an optional parameter
-``permanent`` which you can use to indicate that the redirection is
-considered permanent.  The default value of ``permanent`` is
-``False``, which generates a ``302 Found`` HTTP response code and is
-appropriate for things like redirecting users after successful
-``POST`` requests.  If ``permanent`` is true, the ``301 Moved
-Permanently`` HTTP response code is used, which is useful for
-e.g. redirecting to a canonical URL for a page in an SEO-friendly
-manner.
+你可以在 `.RequestHandler` 对象中使用 ``self.redirect()`` 重定向用户到别处。
+还有一个可选参数 ``permanent``，你可以用它来表示永久重定向。 ``permanent`` 的默认值为 ``False`` ,
+这会生成 ``302 Found`` HTTP响应码适用于 ``POST``请求 成功后重定向用户等。
+如果 ``permanent`` 是 ``True`` , 将会返回 ``301 Moved
+Permanently`` HTTP响应码，这是推荐的通常用于例如重定向到SEO友好的页面的
+方式。
 
-`.RedirectHandler` lets you configure redirects directly in your
-`.Application` routing table.  For example, to configure a single
-static redirect::
+`.RedirectHandler`让你直接在你的 `.Application` 配置中配置重定向
+路由表。 例如，配置一个单个静态重定向::
 
     app = tornado.web.Application([
         url(r"/app", tornado.web.RedirectHandler,
             dict(url="http://itunes.apple.com/my-app-id")),
         ])
 
-`.RedirectHandler` also supports regular expression substitutions.
-The following rule redirects all requests beginning with ``/pictures/``
-to the prefix ``/photos/`` instead::
+`.RedirectHandler`也支持正则表达式替换。以下规则将重定向 ``/ pictures /`` 开头的所有请求
+改为前缀``/ photos /``::
 
     app = tornado.web.Application([
         url(r"/photos/(.*)", MyPhotoHandler),
@@ -228,14 +212,11 @@ to the prefix ``/photos/`` instead::
             dict(url=r"/photos/{0}")),
         ])
 
-Unlike `.RequestHandler.redirect`, `.RedirectHandler` uses permanent
-redirects by default.  This is because the routing table does not change
-at runtime and is presumed to be permanent, while redirects found in
-handlers are likely to be the result of other logic that may change.
-To send a temporary redirect with a `.RedirectHandler`, add
-``permanent=False`` to the `.RedirectHandler` initialization arguments.
+与 `.RequestHandler.redirect`不同，`.RedirectHandler` 默认使用永久性
+重定向。 这是因为在运行时路由表不会改变，被认为是永久性的，而在处理程序中找到的重定向可能是更改的其他逻辑的结果。
+要使用`.RedirectHandler`发送临时重定向，请添加 ``permanent = False`` 到 `.RedirectHandler` 初始化参数。
 
-Asynchronous handlers
+异步处理器
 ~~~~~~~~~~~~~~~~~~~~~
 
 Certain handler methods (including ``prepare()`` and the HTTP verb
