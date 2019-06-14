@@ -62,7 +62,7 @@ Tornado模版支持的 *控制代码* 和 *表达式*。
 ``}}`` 包围, 例如。 ``{{ items[0] }}``.
 
 控制代码是Python代码的子集。我们支持 ``if``, ``for``, ``while``, 和 ``try``,
-所有这些都以 ``{% end %}`` 结束. 我们同样支持 *内嵌模版*，
+所有这些都以 ``{% end %}`` 结束. 我们同样支持 *模版继承* ，
 使用 ``extends`` 和 ``block`` 声明, 更多的关于这块的细节描述在 `tornado.template`。
 
 表达式能够使用任何的Python表达式，包括函数调用。
@@ -91,11 +91,9 @@ Tornado模版支持的 *控制代码* 和 *表达式*。
 - Any keyword arguments passed to `~.RequestHandler.render` or
   `~.RequestHandler.render_string`
 
-When you are building a real application, you are going to want to use
-all of the features of Tornado templates, especially template
-inheritance. Read all about those features in the `tornado.template`
-section (some features, including ``UIModules`` are implemented in the
-`tornado.web` module)
+当您构建一个真正的应用程序时，您将要使用Tornado模板的所有功能，尤其是模板
+继承。 阅读所有关于 `tornado.template` 中的功能
+部分（一些功能，包括 ``UIModules`` 在 `tornado.web` 模块中实现
 
 Under the hood, Tornado templates are translated directly to Python. The
 expressions you include in your template are copied verbatim into a
@@ -208,7 +206,7 @@ the user's locale is ``es_GT``, and the ``es`` locale is supported,
 
 .. _ui-modules:
 
-UI modules
+UI 模块
 ~~~~~~~~~~
 
 Tornado supports *UI modules* to make it easy to support standard,
