@@ -5,39 +5,30 @@
 
    import tornado.web
 
-Tornado includes a simple, fast, and flexible templating language.
-This section describes that language as well as related issues
-such as internationalization.
+Tornado 包括一个简单，快速，灵活的模版语言。
+本节介绍该语言以及相关问题比如国际化。
 
-Tornado can also be used with any other Python template language,
-although there is no provision for integrating these systems into
-`.RequestHandler.render`.  Simply render the template to a string
-and pass it to `.RequestHandler.write`
+Tornado还可以与任何其他Python模板语言一起使用，虽然没有将这些系统一起整合到
+`.RequestHandler.render`。要渲染简单的模版可以将字符串提供给 `.RequestHandler.write`。
 
-Configuring templates
+配置模版
 ~~~~~~~~~~~~~~~~~~~~~
 
-By default, Tornado looks for template files in the same directory as
-the ``.py`` files that refer to them.  To put your template files in a
-different directory, use the ``template_path`` `Application setting
-<.Application.settings>` (or override `.RequestHandler.get_template_path`
-if you have different template paths for different handlers).
+默认的，Tornado会在引用模版的 ``.py`` 文件相同的目录下搜索模版文件。如果你的模版文件在不同的目录下，
+使用 ``template_path`` `应用设置
+<.Application.settings>` (或者如果你不同的处理器有不同目录的模版文件覆写 `.RequestHandler.get_template_path`)。
 
-To load templates from a non-filesystem location, subclass
-`tornado.template.BaseLoader` and pass an instance as the
-``template_loader`` application setting.
+如果需要从非本地文件系统加载模版，继承
+`tornado.template.BaseLoader` 并在应用设置里将该子类的实例赋给
+``template_loader`` 。
 
-Compiled templates are cached by default; to turn off this caching
-and reload templates so changes to the underlying files are always
-visible, use the application settings ``compiled_template_cache=False``
-or ``debug=True``.
+默认会缓存编译的模版；如果要即时看到模版的更改可以在应用设置字段  ``compiled_template_cache=False``
+or ``debug=True`` 关闭缓存的行为并自动重新加载模版。
 
-
-Template syntax
+模版语法
 ~~~~~~~~~~~~~~~
 
-A Tornado template is just HTML (or any other text-based format) with
-Python control sequences and expressions embedded within the markup::
+一个Tornado模版只是HTML(或其他文本格式)中嵌入了Python控制代码和表达式的标记::
 
     <html>
        <head>
@@ -52,8 +43,8 @@ Python control sequences and expressions embedded within the markup::
        </body>
      </html>
 
-If you saved this template as "template.html" and put it in the same
-directory as your Python file, you could render this template with:
+如果你将这个模版保存到 "template.html" 并将该文件放入跟Python文件相同的目录，你可以用下面的
+方式渲染模版:
 
 .. testcode::
 
@@ -65,24 +56,18 @@ directory as your Python file, you could render this template with:
 .. testoutput::
    :hide:
 
-Tornado templates support *control statements* and *expressions*.
-Control statements are surrounded by ``{%`` and ``%}``, e.g.,
-``{% if len(items) > 2 %}``. Expressions are surrounded by ``{{`` and
-``}}``, e.g., ``{{ items[0] }}``.
+Tornado模版支持的 *控制代码* 和 *表达式*。
+控制代码被 ``{%`` 和 ``%}`` 包围，例如，
+``{% if len(items) > 2 %}``. 表达式被 ``{{`` 和
+``}}`` 包围, 例如。 ``{{ items[0] }}``.
 
-Control statements more or less map exactly to Python statements. We
-support ``if``, ``for``, ``while``, and ``try``, all of which are
-terminated with ``{% end %}``. We also support *template inheritance*
-using the ``extends`` and ``block`` statements, which are described in
-detail in the documentation for the `tornado.template`.
+控制代码是Python代码的子集。我们支持 ``if``, ``for``, ``while``, 和 ``try``,
+所有这些都以 ``{% end %}`` 结束. 我们同样支持 *内嵌模版*，
+使用 ``extends`` 和 ``block`` 声明, 更多的关于这块的细节描述在 `tornado.template`。
 
-Expressions can be any Python expression, including function calls.
-Template code is executed in a namespace that includes the following
-objects and functions (Note that this list applies to templates
-rendered using `.RequestHandler.render` and
-`~.RequestHandler.render_string`. If you're using the
-`tornado.template` module directly outside of a `.RequestHandler` many
-of these entries are not present).
+表达式能够使用任何的Python表达式，包括函数调用。
+模板代码在包含以下对象和函数的命名空间中执行（请注意，此列表适用于使用 `.RequestHandler.render` 和 `~.RequestHandler.render_string`
+渲染的模板。如果你直接在 `.RequestHandler` 之外使用`tornado.template`模块，那么这些条目就不存在了).
 
 - ``escape``: alias for `tornado.escape.xhtml_escape`
 - ``xhtml_escape``: alias for `tornado.escape.xhtml_escape`
