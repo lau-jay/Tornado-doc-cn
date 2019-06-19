@@ -95,31 +95,22 @@ Tornado模版支持的 *控制代码* 和 *表达式*。
 继承。 阅读所有关于 `tornado.template` 中的功能
 部分（一些功能，包括 ``UIModules`` 在 `tornado.web` 模块中实现
 
-Under the hood, Tornado templates are translated directly to Python. The
-expressions you include in your template are copied verbatim into a
-Python function representing your template. We don't try to prevent
-anything in the template language; we created it explicitly to provide
-the flexibility that other, stricter templating systems prevent.
-Consequently, if you write random stuff inside of your template
-expressions, you will get random Python errors when you execute the
-template.
+在内部，Tornado是直接将模版转换为Python代码。
+在模板中包含的表达式将逐字复制到表示模板的Python函数中。
+T我们不会试图阻止模板语言中的任何内容; 我们明确地创建了它，以提供其他更严格的模板系统所阻止的灵活性。
+因此，如果在模板表达式中编写随机内容，则在执行模板时会出现相应的Python错误。
 
-All template output is escaped by default, using the
-`tornado.escape.xhtml_escape` function. This behavior can be changed
-globally by passing ``autoescape=None`` to the `.Application` or
-`.tornado.template.Loader` constructors, for a template file with the
-``{% autoescape None %}`` directive, or for a single expression by
-replacing ``{{ ... }}`` with ``{% raw ...%}``. Additionally, in each of
-these places the name of an alternative escaping function may be used
-instead of ``None``.
+所有的模版的输出默认都是使用 `tornado.escape.xhtml_escape` 函数转义的。
+这个默认的行为可以通过更改 `.Application` 中的设置全局变量 ``autoescape=None`` 或
+`.tornado.template.Loader` 构造器更改, 在文件中使用
+``{% autoescape None %}`` 指令directive, 或者在单个表达式中用  ``{% raw ...%}``
+替换 ``{{ ... }}`` 。另外，在这些地方的每一个中，可以使用转义函数的名称替代 ``None`` 。
 
-Note that while Tornado's automatic escaping is helpful in avoiding
-XSS vulnerabilities, it is not sufficient in all cases.  Expressions
-that appear in certain locations, such as in Javascript or CSS, may need
-additional escaping.  Additionally, either care must be taken to always
-use double quotes and `.xhtml_escape` in HTML attributes that may contain
-untrusted content, or a separate escaping function must be used for
-attributes (see e.g. http://wonko.com/post/html-escaping)
+
+请注意，虽然Tornado的自动转义有助于避免XSS漏洞，但并不是在所有情况下都是能避免的。
+出现在某些位置的表达式（例如Javascript或CSS）可能需要额外的转义。
+此外，必须注意始终在可能包含不受信任内容的HTML属性中使用双引号和 `.xhtml_escape`，
+或者必须对属性单独的使用转义函数。(看例子 http://wonko.com/post/html-escaping)
 
 Internationalization
 ~~~~~~~~~~~~~~~~~~~~
@@ -209,6 +200,7 @@ the user's locale is ``es_GT``, and the ``es`` locale is supported,
 UI 模块
 ~~~~~~~~~~
 
+Tornado支持 *UI modules* 
 Tornado supports *UI modules* to make it easy to support standard,
 reusable UI widgets across your application. UI modules are like special
 function calls to render components of your page, and they can come
