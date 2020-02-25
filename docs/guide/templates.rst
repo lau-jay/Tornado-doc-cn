@@ -112,34 +112,30 @@ T我们不会试图阻止模板语言中的任何内容; 我们明确地创建�
 此外，必须注意始终在可能包含不受信任内容的HTML属性中使用双引号和 `.xhtml_escape`，
 或者必须对属性单独的使用转义函数。(看例子 http://wonko.com/post/html-escaping)
 
-Internationalization
+国际化
 ~~~~~~~~~~~~~~~~~~~~
 
-The locale of the current user (whether they are logged in or not) is
-always available as ``self.locale`` in the request handler and as
-``locale`` in templates. The name of the locale (e.g., ``en_US``) is
-available as ``locale.name``, and you can translate strings with the
-`.Locale.translate` method. Templates also have the global function
-call ``_()`` available for string translation. The translate function
-has two forms::
+当前用户的本地语言环境(无论他们是否登录)总是通过请求处理器的 ``self.locale`` 和
+模板中的 ``locale`` 来得到。本地语言环境的编码（比如, ``en_US`` ）可以通过
+ ``local.name`` 来获取，此外还可以通过翻译方法 ``.Locale.translate`` 来翻译字符串。
+模板还具有可用于字符串翻译的全局函数, 调用 ``_()`` 可以翻译字符串。
+这个翻译函数有种用法::
 
     _("Translate this string")
 
-which translates the string directly based on the current locale, and::
+直接根据当前语言环境翻译字符串, 和::
 
     _("A person liked this", "%(num)d people liked this",
       len(people)) % {"num": len(people)}
 
-which translates a string that can be singular or plural based on the
-value of the third argument. In the example above, a translation of the
-first string will be returned if ``len(people)`` is ``1``, or a
-translation of the second string will be returned otherwise.
+根据第三个参数的值转换字符串，可以是单数或复数。 在上面的示例中，
+如果 ``len（people）`` 为 ``1`` ，则将返回第一个字符串的翻译，
+否则将返回第二个字符串的翻译。
 
-The most common pattern for translations is to use Python named
-placeholders for variables (the ``%(num)d`` in the example above) since
-placeholders can move around on translation.
+最常见的翻译模式是使用Python的字符串格式化的方式（在上面的示例中为 ``％(num)d`` ），
+因为占位符可以放在待翻译的字符串的任意位置，比较灵活。
 
-Here is a properly internationalized template::
+这里是一个使用恰当的国际化模版::
 
     <html>
        <head>
@@ -155,11 +151,10 @@ Here is a properly internationalized template::
        </body>
      </html>
 
-By default, we detect the user's locale using the ``Accept-Language``
-header sent by the user's browser. We choose ``en_US`` if we can't find
-an appropriate ``Accept-Language`` value. If you let user's set their
-locale as a preference, you can override this default locale selection
-by overriding `.RequestHandler.get_user_locale`:
+默认的，我们使用用户浏览器的发送的http头部中的 ``Accept-Language`` 头部字段检测用户的语言环境。
+如果没有发现 ``Accept-Language `` 值那么我们选择 ``en_US`` 。
+如果您让用户将其语言环境设置为首选项，则可以通  `.RequestHandler.get_user_locale`:
+覆盖默认的语言环境选择。
 
 .. testcode::
 
@@ -178,8 +173,8 @@ by overriding `.RequestHandler.get_user_locale`:
 .. testoutput::
    :hide:
 
-If ``get_user_locale`` returns ``None``, we fall back on the
-``Accept-Language`` header.
+如果 ``get_user_locale`` 返回 ``None``, 我们选择we fall back on the
+我们讲退化到使用 ``Accept-Language`` HTTP头部字段。
 
 The `tornado.locale` module supports loading translations in two
 formats: the ``.mo`` format used by `gettext` and related tools, and a
