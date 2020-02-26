@@ -173,22 +173,16 @@ T我们不会试图阻止模板语言中的任何内容; 我们明确地创建�
 .. testoutput::
    :hide:
 
-如果 ``get_user_locale`` 返回 ``None``, 我们选择we fall back on the
-我们讲退化到使用 ``Accept-Language`` HTTP头部字段。
+如果 ``get_user_locale`` 返回 ``None``, 我们将退化到使用 ``Accept-Language`` HTTP头部字段。
 
-The `tornado.locale` module supports loading translations in two
-formats: the ``.mo`` format used by `gettext` and related tools, and a
-simple ``.csv`` format.  An application will generally call either
-`tornado.locale.load_translations` or
-`tornado.locale.load_gettext_translations` once at startup; see those
-methods for more details on the supported formats..
+ `tornado.locale` 模块对翻译文件的支持有两种: `gettext` 和相关工具使用的 ``.mo`` 格式，
+ 还有简单的 ``.csv``。 一个应用在启动的时候通常会在 `tornado.locale.load_translations` 和
+  `tornado.locale.load_gettext_translations` 选择一个调用一次；有关支持的格式的更多详细信息，请参见这些方法。
 
-You can get the list of supported locales in your application with
-`tornado.locale.get_supported_locales()`. The user's locale is chosen
-to be the closest match based on the supported locales. For example, if
-the user's locale is ``es_GT``, and the ``es`` locale is supported,
-``self.locale`` will be ``es`` for that request. We fall back on
-``en_US`` if no close match can be found.
+
+你可以通过以下方式获取应用程序中支持的语言环境的列表：`tornado.locale.get_supported_locales()`。
+根据支持的语言环境，将用户的语言环境选择为最接近的匹配项。
+例如，如果用户的语言环境是 ``es_GT`` ，并且支持 ``es`` 语言环境，则该请求的 ``self.locale`` 将是 ``es``。 如果找不到最接近的匹配项，我们将退化到 ``en_US``。
 
 .. _ui-modules:
 
