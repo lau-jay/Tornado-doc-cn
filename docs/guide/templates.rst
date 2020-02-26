@@ -189,24 +189,20 @@ T我们不会试图阻止模板语言中的任何内容; 我们明确地创建�
 UI 模块
 ~~~~~~~~~~
 
-Tornado支持 *UI modules* 
-Tornado supports *UI modules* to make it easy to support standard,
-reusable UI widgets across your application. UI modules are like special
-function calls to render components of your page, and they can come
-packaged with their own CSS and JavaScript.
+Tornado提供 *UI modules* 去跟更容易的构建标准的，在整个应用中可重用的UI组件。
+UI模块就像用于渲染页面组件的特殊函数调用一样，它们可以与自己的CSS和JavaScript打包在一起
 
-For example, if you are implementing a blog, and you want to have blog
-entries appear on both the blog home page and on each blog entry page,
-you can make an ``Entry`` module to render them on both pages. First,
-create a Python module for your UI modules, e.g., ``uimodules.py``::
+
+例如，如果你实现了一个博客，并且你希望博客条目同时出现在博客首页和每个博客条目页面上，
+你可以制作一个 ``Entry`` 模块在两个页面上进行渲染。 首先，为你的UI模块创建一个Python模块，例如 ``uimodules.py`` ::
 
     class Entry(tornado.web.UIModule):
         def render(self, entry, show_comments=False):
             return self.render_string(
                 "module-entry.html", entry=entry, show_comments=show_comments)
 
-Tell Tornado to use ``uimodules.py`` using the ``ui_modules`` setting in
-your application::
+
+告诉Tornado在应用程序中使用 ``ui_modules`` 设置来使用 ``uimodules.py`` ::
 
     from . import uimodules
 
