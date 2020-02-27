@@ -202,7 +202,7 @@ UI模块就像用于渲染页面组件的特殊函数调用一样，它们可以
                 "module-entry.html", entry=entry, show_comments=show_comments)
 
 
-告诉Tornado在应用程序中使用 ``ui_modules`` 设置来使用 ``uimodules.py`` ::
+在应用程序中使用 ``ui_modules`` 设置来告诉Tornado使用 ``uimodules.py`` ::
 
     from . import uimodules
 
@@ -225,21 +225,18 @@ UI模块就像用于渲染页面组件的特殊函数调用一样，它们可以
         (r"/entry/([0-9]+)", EntryHandler),
     ], **settings)
 
-Within a template, you can call a module with the ``{% module %}``
-statement.  For example, you could call the ``Entry`` module from both
-``home.html``::
+在模板中，您可以使用 ``{% module %}`` 声明来调用模块。例如，你可以在 ``home.html::
 
     {% for entry in entries %}
       {% module Entry(entry) %}
     {% end %}
 
-and ``entry.html``::
+和  ``entry.html`` 两个中调用Entry模块::
 
     {% module Entry(entry, show_comments=True) %}
 
-Modules can include custom CSS and JavaScript functions by overriding
-the ``embedded_css``, ``embedded_javascript``, ``javascript_files``, or
-``css_files`` methods::
+通过覆写 ``embedded_css``，``embedded_javascript``，``javascript_files`` 或
+``css_files`` 方法来客制化CSS或JavaScript::
 
     class Entry(tornado.web.UIModule):
         def embedded_css(self):
@@ -249,24 +246,19 @@ the ``embedded_css``, ``embedded_javascript``, ``javascript_files``, or
             return self.render_string(
                 "module-entry.html", show_comments=show_comments)
 
-Module CSS and JavaScript will be included once no matter how many times
-a module is used on a page. CSS is always included in the ``<head>`` of
-the page, and JavaScript is always included just before the ``</body>``
-tag at the end of the page.
+无论页面上使用模块多少次，都将只导入一次CSS和JavaScript模块。 CSS总是包含在页面的 ``<head>`` 中，
+而JavaScript总是包含在页面末尾的 ``</body>`` 标签之前。
 
-When additional Python code is not required, a template file itself may
-be used as a module. For example, the preceding example could be
-rewritten to put the following in ``module-entry.html``::
+当不需要其他Python代码时，模板文件本身可能会
+用作模块。 例如，前面的示例可以重写将以下内容放置在 ``module-entry.html`` 中::
 
     {{ set_resources(embedded_css=".entry { margin-bottom: 1em; }") }}
     <!-- more template html... -->
 
-This revised template module would be invoked with::
+修改后的模板模块将通过以下方式调用::
 
     {% module Template("module-entry.html", show_comments=True) %}
 
-The ``set_resources`` function is only available in templates invoked
-via ``{% module Template(...) %}``. Unlike the ``{% include ... %}``
-directive, template modules have a distinct namespace from their
-containing template - they can only see the global template namespace
-and their own keyword arguments.
+``set_resources``  函数仅在通过 ``{% module Template(...) %}`` 调用的模板中可用。
+与 ``{％include ...％}`` 指令不同，模板模块与其包含的模板具有不同的名称空间- 它们只能看到全局模板名称空间和它们自己的关键字参数。
+
